@@ -3,18 +3,15 @@ name: minimax-xlsx
 version: "2.0"
 description: "Create, inspect and edit XLSX cells, calculate supported formulas, and import/export CSV or TSV. Use for reports and spreadsheet data exchange."
 license: MIT
-metadata:
-  version: "2.0"
-  category: productivity
-  sources:
-    - ECMA-376 Office Open XML File Formats
 ---
 
 # MiniMax XLSX — Python Standard Library
 
+Category: productivity. Format reference: ECMA-376 Office Open XML File Formats.
+
 Use Python 3.9+ without installing packages, launching Office/LibreOffice, or using plugins.
 The maintained entrypoint is `scripts/stdlib_xlsx.py`; it imports the bundled
-`formula_engine.py`. Keep both files and `templates/minimal_xlsx/` together.
+`formula_engine.py`. Keep both files and `assets/minimal_xlsx/` together.
 
 ## 执行环境约束与首步自检
 
@@ -44,6 +41,12 @@ context compaction. Verify the actual output and available delivery mechanism se
 
 | Task | Action | Reference |
 |---|---|---|
+| Compute median, quantiles and variance/stddev | `xlsx_advanced.py describe` | [advanced-statistics.md](references/advanced-statistics.md) |
+| Compare explicit monthly periods | `xlsx_advanced.py compare` | [period-comparison.md](references/period-comparison.md) |
+| Match tables by typed composite keys | `xlsx_match.py` | [table-matching.md](references/table-matching.md) |
+| Deduplicate and stably sort typed rows | `xlsx_rows.py` | [row-processing.md](references/row-processing.md) |
+| Suggest possible header ranges for review | `xlsx_header_candidates.py` | [header-candidates.md](references/header-candidates.md) |
+| Reconstruct or select multi-level headers | `xlsx_headers.py`; `--header-rows` in data operations | [multi-level-headers.md](references/multi-level-headers.md) |
 | Profile a region, filter or group data | `xlsx_analysis.py profile` / `summarize` | [data-analysis.md](references/data-analysis.md) |
 | Diagnose file contents or ET/ETT candidates | `xlsx_identify.py` | [data-analysis.md](references/data-analysis.md) |
 | Import CSV/TSV or export a worksheet/range | `xlsx_tabular.py import` / `export` | [tabular-interchange.md](references/tabular-interchange.md) |
@@ -105,6 +108,5 @@ shifting and regex reference rewriting are not a safe structural-edit implementa
 From the repository root:
 
 ```console
-python3 -I -S -B -m unittest discover -s skills/minimax-xlsx/tests -p 'test_*.py' -v
-python3 -I -S -B -m unittest discover -s skills/minimax-xlsx/scripts -p 'test_xlsx*.py' -v
+python3 -I -S -B -m unittest discover -s skills/minimax-xlsx/scripts -p 'test_*.py' -v
 ```

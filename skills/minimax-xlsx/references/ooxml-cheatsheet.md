@@ -1,5 +1,17 @@
 # OOXML SpreadsheetML Cheat Sheet
 
+## Contents
+
+- [Package Structure](#package-structure)
+- [Cell Reference Format](#cell-reference-format)
+- [Cell XML Reference](#cell-xml-reference)
+- [styles.xml Reference](#stylesxml-reference)
+- [sharedStrings.xml Reference](#sharedstringsxml-reference)
+- [workbook.xml / .rels Sync](#workbookxml--rels-sync)
+- [Column / Row Dimensions](#column--row-dimensions)
+- [Freeze Panes](#freeze-panes)
+- [7 Excel Error Types (All Must Be Absent at Delivery)](#7-excel-error-types-all-must-be-absent-at-delivery)
+
 Quick reference for XML manipulation of xlsx files.
 
 ---

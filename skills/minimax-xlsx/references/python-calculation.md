@@ -3,6 +3,14 @@
 All commands run from the task directory. Replace `<skill_dir>` with the confirmed
 skill directory. Python 3.9+; no pip packages, external applications or network access.
 
+## Contents
+
+- [Commands](#commands)
+- [Input JSON](#input-json)
+- [Formula subset](#formula-subset)
+- [Results and exit codes](#results-and-exit-codes)
+- [Known business computations without Excel formulas](#known-business-computations-without-excel-formulas)
+
 ## Commands
 
 ```console
@@ -21,7 +29,7 @@ Redirect command stdout to a task report file if a persistent JSON report is nee
 
 ## Input JSON
 
-A runnable example is bundled at [calculation_example.json](../templates/calculation_example.json).
+A runnable example is bundled at [calculation_example.json](../assets/calculation_example.json).
 
 Both create and edit use this shape. Edit accepts only existing sheet names and patches
 only listed cells; it does not replace the sheet's remaining data.

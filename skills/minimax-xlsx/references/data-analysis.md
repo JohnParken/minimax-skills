@@ -15,7 +15,8 @@ python3 -I -S -B "<skill_dir>/scripts/xlsx_analysis.py" profile input.xlsx --she
 ```
 
 By default the first selected row supplies headers and is excluded from statistics.
-Column letters remain absolute worksheet coordinates, including for an offset region.
+Column letters remain absolute coordinates. For explicit multi-level rows and path/ID
+selectors, use [multi-level-headers.md](multi-level-headers.md).
 Duplicate/empty header labels do not affect selection. Without a range, use A1 through
 the maximum stored row/column. Explicit regions include sparse blank cells.
 
@@ -47,11 +48,11 @@ Create task-local `query.json`:
 python3 -I -S -B "<skill_dir>/scripts/xlsx_analysis.py" summarize input.xlsx --sheet Sales --query query.json
 ```
 
-`group_by` is a list of unique column letters inside the selected range; omit it for
+`group_by` is a list of unique column selectors inside the selected range; omit it for
 one aggregate group. Omit `measure` for row counts only. One numeric measure is supported.
 `filters` are combined with AND; eq/ne use typed equality, gt/ge/lt/le require JSON
-numeric thresholds and select numeric cells only. No string-to-number conversion,
-expression evaluation, OR expressions, date comparisons or header-name lookup occurs.
+numeric thresholds and select numeric cells only. No string-to-number conversion, expression evaluation, OR expressions or date comparisons
+occur. Header path lookup requires explicit header rows; plain label guessing is not used.
 Unknown keys and duplicate JSON keys fail. Null filters match missing cells; an empty
 string matches empty text. ISO date cells do not match ordinary text filters.
 

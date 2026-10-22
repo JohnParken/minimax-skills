@@ -117,7 +117,7 @@ class Workbook:
     @classmethod
     def create(cls, spec):
         sheets = validate_spec(spec)
-        template = Path(__file__).resolve().parent.parent / "templates" / "minimal_xlsx"
+        template = Path(__file__).resolve().parent.parent / "assets" / "minimal_xlsx"
         parts = {p.relative_to(template).as_posix(): p.read_bytes()
                  for p in template.rglob("*") if p.is_file()}
         wb = ET.Element(NS + "workbook")

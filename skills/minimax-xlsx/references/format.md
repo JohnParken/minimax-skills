@@ -1,5 +1,21 @@
 # Financial Formatting & Output Standards — Complete Agent Guide
 
+## Contents
+
+- [1. When to Use This Path](#1-when-to-use-this-path)
+- [2. Financial Format Semantic System](#2-financial-format-semantic-system)
+- [3. styles.xml Surgical Operations](#3-stylesxml-surgical-operations)
+- [4. Pre-defined Style Index Complete Reference Table (13 Slots)](#4-pre-defined-style-index-complete-reference-table-13-slots)
+- [5. Assumption Separation Principle: XML-Level Implementation](#5-assumption-separation-principle-xml-level-implementation)
+- [6. Complete Operational Workflow](#6-complete-operational-workflow)
+- [7. Formatting Completeness Checklist](#7-formatting-completeness-checklist)
+- [8. Prohibited Actions (What You Must NOT Do)](#8-prohibited-actions-what-you-must-not-do)
+- [9. Common Errors and Fixes](#9-common-errors-and-fixes)
+- [10. Financial Model Structure Conventions](#10-financial-model-structure-conventions)
+- [11. Assumption Categories](#11-assumption-categories)
+- [12. Audit Trail Best Practices](#12-audit-trail-best-practices)
+- [13. Pre-Delivery Checklist (Common Financial Model Checklist)](#13-pre-delivery-checklist-common-financial-model-checklist)
+
 > This document is the complete reference manual for the agent when applying professional financial formatting to xlsx files. All operations target direct XML surgery on `xl/styles.xml` without using openpyxl. Every operational step provides ready-to-use XML snippets.
 
 ---
