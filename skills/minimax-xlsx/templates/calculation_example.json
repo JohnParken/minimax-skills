@@ -1,0 +1,50 @@
+{
+  "sheets": [
+    {
+      "name": "Sales",
+      "cells": {
+        "A1": {
+          "value": "Quantity",
+          "style": 4
+        },
+        "B1": {
+          "value": "Unit price",
+          "style": 4
+        },
+        "C1": {
+          "value": "Discount factor",
+          "style": 4
+        },
+        "D1": {
+          "value": "Amount",
+          "style": 4
+        },
+        "A2": {
+          "value": 12
+        },
+        "B2": {
+          "value": 19.9
+        },
+        "C2": {
+          "value": 0.95
+        },
+        "D2": {
+          "formula": "ROUND(A2*B2*C2,2)",
+          "style": 2
+        }
+      }
+    },
+    {
+      "name": "Summary",
+      "cells": {
+        "A1": {
+          "value": "Total"
+        },
+        "B1": {
+          "formula": "Sales!D2",
+          "style": 3
+        }
+      }
+    }
+  ]
+}

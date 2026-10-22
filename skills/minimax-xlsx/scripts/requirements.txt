@@ -1,0 +1,2 @@
+# Maintained stdlib_xlsx.py / formula_engine.py workflow: Python 3.9+, standard library only.
+# No packages to install. Legacy xlsx_reader.py and libreoffice_recalc.py are outside this workflow.

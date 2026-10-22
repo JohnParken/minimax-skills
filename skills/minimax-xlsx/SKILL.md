@@ -1,138 +1,110 @@
 ---
 name: minimax-xlsx
-description: "Open, create, read, analyze, edit, or validate Excel/spreadsheet files (.xlsx, .xlsm, .csv, .tsv). Use when the user asks to create, build, modify, analyze, read, validate, or format any Excel spreadsheet, financial model, pivot table, or tabular data file. Covers: creating new xlsx from scratch, reading and analyzing existing files, editing existing xlsx with zero format loss, formula recalculation and validation, and applying professional financial formatting standards. Triggers on 'spreadsheet', 'Excel', '.xlsx', '.csv', 'pivot table', 'financial model', 'formula', or any request to produce tabular data in Excel format."
+version: "2.0"
+description: "Create, inspect and edit XLSX cells, calculate supported formulas, and import/export CSV or TSV. Use for reports and spreadsheet data exchange."
 license: MIT
 metadata:
-  version: "1.0"
+  version: "2.0"
   category: productivity
   sources:
     - ECMA-376 Office Open XML File Formats
-    - Microsoft Open XML SDK documentation
 ---
 
-# MiniMax XLSX Skill
+# MiniMax XLSX — Python Standard Library
 
-Handle the request directly. Do NOT spawn sub-agents. Always write the output file the user requests.
+Use Python 3.9+ without installing packages, launching Office/LibreOffice, or using plugins.
+The maintained entrypoint is `scripts/stdlib_xlsx.py`; it imports the bundled
+`formula_engine.py`. Keep both files and `templates/minimal_xlsx/` together.
 
-## Task Routing
+## 执行环境约束与首步自检
 
-| Task | Method | Guide |
-|------|--------|-------|
-| **READ** — analyze existing data | `xlsx_reader.py` + pandas | `references/read-analyze.md` |
-| **CREATE** — new xlsx from scratch | XML template | `references/create.md` + `references/format.md` |
-| **EDIT** — modify existing xlsx | XML unpack→edit→pack | `references/edit.md` (+ `format.md` if styling needed) |
-| **FIX** — repair broken formulas in existing xlsx | XML unpack→fix `<f>` nodes→pack | `references/fix.md` |
-| **VALIDATE** — check formulas | `formula_check.py` | `references/validate.md` |
+Confirm the task working directory and input/output paths before operating. Resolve
+`<skill_dir>` from the actual location of this SKILL.md; replace that placeholder in
+commands with the real directory. Do not generate task files in the skill source tree.
+Use relative task data paths from the confirmed task directory. No installation is needed.
+Do not use parent paths, absolute data paths or mount changes to bypass task boundaries.
+If the current directory is the skill source, have the harness confirm a separate task
+directory first. Resolve Markdown resources relative to the containing file; never infer
+the skill location from environment variables, another session, or masked host paths.
 
-## READ — Analyze data (read `references/read-analyze.md` first)
+Before the first operation, run:
 
-Start with `xlsx_reader.py` for structure discovery, then pandas for custom analysis. Never modify the source file.
-
-**Formatting rule**: When the user specifies decimal places (e.g. "2 decimal places"), apply that format to ALL numeric values — use `f'{v:.2f}'` on every number. Never output `12875` when `12875.00` is required.
-
-**Aggregation rule**: Always compute sums/means/counts directly from the DataFrame column — e.g. `df['Revenue'].sum()`. Never re-derive column values before aggregation.
-
-## CREATE — XML template (read `references/create.md` + `references/format.md`)
-
-Copy `templates/minimal_xlsx/` → edit XML directly → pack with `xlsx_pack.py`. Every derived value MUST be an Excel formula (`<f>SUM(B2:B9)</f>`), never a hardcoded number. Apply font colors per `format.md`.
-
-## EDIT — XML direct-edit (read `references/edit.md` first)
-
-**CRITICAL — EDIT INTEGRITY RULES:**
-1. **NEVER create a new `Workbook()`** for edit tasks. Always load the original file.
-2. The output MUST contain the **same sheets** as the input (same names, same data).
-3. Only modify the specific cells the task asks for — everything else must be untouched.
-4. **After saving output.xlsx, verify it**: open with `xlsx_reader.py` or `pandas` and confirm the original sheet names and a sample of original data are present. If verification fails, you wrote the wrong file — fix it before delivering.
-
-Never use openpyxl round-trip on existing files (corrupts VBA, pivots, sparklines). Instead: unpack → use helper scripts → repack.
-
-**"Fill cells" / "Add formulas to existing cells" = EDIT task.** If the input file already exists and you are told to fill, update, or add formulas to specific cells, you MUST use the XML edit path. Never create a new `Workbook()`. Example — fill B3 with a cross-sheet SUM formula:
-```bash
-python3 SKILL_DIR/scripts/xlsx_unpack.py input.xlsx /tmp/xlsx_work/
-# Find the target sheet's XML via xl/workbook.xml → xl/_rels/workbook.xml.rels
-# Then use the Edit tool to add <f> inside the target <c> element:
-#   <c r="B3"><f>SUM('Sales Data'!D2:D13)</f><v></v></c>
-python3 SKILL_DIR/scripts/xlsx_pack.py /tmp/xlsx_work/ output.xlsx
+```console
+python3 -I -S -B "<skill_dir>/scripts/stdlib_xlsx.py" check
 ```
 
-**Add a column** (formulas, numfmt, styles auto-copied from adjacent column):
-```bash
-python3 SKILL_DIR/scripts/xlsx_unpack.py input.xlsx /tmp/xlsx_work/
-python3 SKILL_DIR/scripts/xlsx_add_column.py /tmp/xlsx_work/ --col G \
-    --sheet "Sheet1" --header "% of Total" \
-    --formula '=F{row}/$F$10' --formula-rows 2:9 \
-    --total-row 10 --total-formula '=SUM(G2:G9)' --numfmt '0.0%' \
-    --border-row 10 --border-style medium
-python3 SKILL_DIR/scripts/xlsx_pack.py /tmp/xlsx_work/ output.xlsx
-```
-The `--border-row` flag applies a top border to ALL cells in that row (not just the new column). Use it when the task requires accounting-style borders on total rows.
+Require exit 0 and JSON `status: ready`. This verifies imports, the template and a
+limited calculation; it does not verify task data, directory permissions, or Excel
+compatibility. Check input readability and, for writes, output-directory writability
+with a uniquely named temporary probe that is read back and removed. Stop dependent
+operations if a check fails. Re-read this entrypoint if its constraints are lost after
+context compaction. Verify the actual output and available delivery mechanism separately.
 
-**Insert a row** (shifts existing rows, updates SUM formulas, fixes circular refs):
-```bash
-python3 SKILL_DIR/scripts/xlsx_unpack.py input.xlsx /tmp/xlsx_work/
-# IMPORTANT: Find the correct --at row by searching for the label text
-# in the worksheet XML, NOT by using the row number from the prompt.
-# The prompt may say "row 5 (Office Rent)" but Office Rent might actually
-# be at row 4. Always locate the row by its text label first.
-python3 SKILL_DIR/scripts/xlsx_insert_row.py /tmp/xlsx_work/ --at 5 \
-    --sheet "Budget FY2025" --text A=Utilities \
-    --values B=3000 C=3000 D=3500 E=3500 \
-    --formula 'F=SUM(B{row}:E{row})' --copy-style-from 4
-python3 SKILL_DIR/scripts/xlsx_pack.py /tmp/xlsx_work/ output.xlsx
-```
-**Row lookup rule**: When the task says "after row N (Label)", always find the row by searching for "Label" in the worksheet XML (`grep -n "Label" /tmp/xlsx_work/xl/worksheets/sheet*.xml` or check sharedStrings.xml). Use the actual row number + 1 for `--at`. Do NOT call `xlsx_shift_rows.py` separately — `xlsx_insert_row.py` calls it internally.
+## Route the task
 
-**Apply row-wide borders** (e.g. accounting line on a TOTAL row):
-After running helper scripts, apply borders to ALL cells in the target row, not just newly added cells. In `xl/styles.xml`, append a new `<border>` with the desired style, then append a new `<xf>` in `<cellXfs>` that clones each cell's existing `<xf>` but sets the new `borderId`. Apply the new style index to every `<c>` in the row via the `s` attribute:
-```xml
-<!-- In xl/styles.xml, append to <borders>: -->
-<border>
-  <left/><right/><top style="medium"/><bottom/><diagonal/>
-</border>
-<!-- Then append to <cellXfs> an xf clone with the new borderId for each existing style -->
-```
-**Key rule**: When a task says "add a border to row N", iterate over ALL cells A through the last column, not just newly added cells.
+| Task | Action | Reference |
+|---|---|---|
+| Profile a region, filter or group data | `xlsx_analysis.py profile` / `summarize` | [data-analysis.md](references/data-analysis.md) |
+| Diagnose file contents or ET/ETT candidates | `xlsx_identify.py` | [data-analysis.md](references/data-analysis.md) |
+| Import CSV/TSV or export a worksheet/range | `xlsx_tabular.py import` / `export` | [tabular-interchange.md](references/tabular-interchange.md) |
+| Inspect XLSX/XLSM or CSV/TSV | `read` | [read-analyze.md](references/read-analyze.md) |
+| Create a report | JSON specification → `create` | [create.md](references/create.md) |
+| Fill or correct existing cells | JSON patch → `edit` | [edit.md](references/edit.md) |
+| Compute supported formulas in an existing file | `calculate` to a new file | [python-calculation.md](references/python-calculation.md) |
+| Repair a known formula defect | Diagnose intent, then `edit` | [fix.md](references/fix.md) |
+| Validate output | Inspect calculation report and preserved content | [validate.md](references/validate.md) |
 
-**Manual XML edit** (for anything the helper scripts don't cover):
-```bash
-python3 SKILL_DIR/scripts/xlsx_unpack.py input.xlsx /tmp/xlsx_work/
-# ... edit XML with the Edit tool ...
-python3 SKILL_DIR/scripts/xlsx_pack.py /tmp/xlsx_work/ output.xlsx
-```
+Read [python-calculation.md](references/python-calculation.md) before any calculation
+or writing task. It defines the JSON contract, commands, formula subset and exit codes.
+Use [format.md](references/format.md) for financial formatting and XML style details;
+its formatting conventions do not override static-result mode or calculation limits.
 
-## FIX — Repair broken formulas (read `references/fix.md` first)
+## Calculation policy
 
-This is an EDIT task. Unpack → fix broken `<f>` nodes → pack. Preserve all original sheets and data.
+- For known business rules, calculate in Python using `Decimal` with an explicit
+  rounding policy. Write those results as `value` when a static report is intended.
+- For editable reports, use supported `formula` expressions. The engine evaluates
+  them and writes both formula and cache. Never accept caller-supplied formula caches.
+- `create --values-only` evaluates all formulas first, then writes static values. It
+  refuses partial results; explain that these values will not update when inputs change.
+- Existing formulas are recalculated only within the documented subset. Unsupported
+  formulas and their dependents keep their formulas and lose stale caches. Exit 2
+  means incomplete calculation, not a fully verified workbook.
+- A known calculation error or circular dependency blocks output. Do not hide errors
+  with default zeros or change business rules just to make calculation pass.
+- This is Decimal subset calculation, not Excel-equivalent recalculation. Report the
+  engine and limits. For unresolved formulas say `部分公式未计算` with affected cells.
+- The opened workbook's old caches are unverified; missing caches are not zero.
 
-## VALIDATE — Check formulas (read `references/validate.md` first)
+## Editing and preservation
 
-Run `formula_check.py` for static validation. Use `libreoffice_recalc.py` for dynamic recalculation when available.
+Never reconstruct an existing workbook from extracted values. `edit` patches the
+original package and preserves unmodified ZIP member contents byte-for-byte. Modified
+worksheet XML is serialized again; full-file byte identity or arbitrary feature
+compatibility is not promised. Formula caches across sheets may change when an input
+changes. Calculation-chain metadata may be removed and recalculation requested.
 
-## Financial Color Standard
+Only cell values, formulas and existing style indices are editable through the CLI.
+Do not insert/delete/move rows, columns or sheets. Editing a sheet containing shared,
+array or other specially attributed formulas is refused. Macro parts can be retained
+in XLSM files, but macros are never run. Charts and pivots are retained, not refreshed.
+Dates are exposed as stored serials or ISO strings, without display-format conversion.
+Signed/encrypted files, legacy XLS/XLSB, chart sheets and strict OOXML are unsupported.
 
-| Cell Role | Font Color | Hex Code |
-|-----------|-----------|----------|
-| Hard-coded input / assumption | Blue | `0000FF` |
-| Formula / computed result | Black | `000000` |
-| Cross-sheet reference formula | Green | `00B050` |
+## Legacy utilities
 
-## Key Rules
+The older scripts remain for compatibility and reference. They are not the standard
+library workflow: `xlsx_reader.py` needs pandas, `libreoffice_recalc.py` needs external
+software, and older helpers may require Python 3.10+. Do not invoke them for this mode.
+In particular, do not use `xlsx_insert_row.py`/`xlsx_shift_rows.py`: their global row
+shifting and regex reference rewriting are not a safe structural-edit implementation.
+`formula_check.py` is heuristic static inspection only; exit 0 does not prove calculation.
 
-1. **Formula-First**: Every calculated cell MUST use an Excel formula, not a hardcoded number
-2. **CREATE → XML template**: Copy minimal template, edit XML directly, pack with `xlsx_pack.py`
-3. **EDIT → XML**: Never openpyxl round-trip. Use unpack/edit/pack scripts
-4. **Always produce the output file** — this is the #1 priority
-5. **Validate before delivery**: `formula_check.py` exit code 0 = safe
+## Development verification
 
-## Utility Scripts
+From the repository root:
 
-```bash
-python3 SKILL_DIR/scripts/xlsx_reader.py input.xlsx                 # structure discovery
-python3 SKILL_DIR/scripts/formula_check.py file.xlsx --json         # formula validation
-python3 SKILL_DIR/scripts/formula_check.py file.xlsx --report      # standardized report
-python3 SKILL_DIR/scripts/xlsx_unpack.py in.xlsx /tmp/work/         # unpack for XML editing
-python3 SKILL_DIR/scripts/xlsx_pack.py /tmp/work/ out.xlsx          # repack after editing
-python3 SKILL_DIR/scripts/xlsx_shift_rows.py /tmp/work/ insert 5 1  # shift rows for insertion
-python3 SKILL_DIR/scripts/xlsx_add_column.py /tmp/work/ --col G ... # add column with formulas
-python3 SKILL_DIR/scripts/xlsx_insert_row.py /tmp/work/ --at 6 ...  # insert row with data
+```console
+python3 -I -S -B -m unittest discover -s skills/minimax-xlsx/tests -p 'test_*.py' -v
+python3 -I -S -B -m unittest discover -s skills/minimax-xlsx/scripts -p 'test_xlsx*.py' -v
 ```

@@ -1,0 +1,4 @@
+# Maintained workflow: Python 3.9+; no third-party dependencies.
+# stdlib_xlsx.py, formula_engine.py and xlsx_tabular.py use the standard library.
+# Legacy xlsx_reader.py requires pandas/openpyxl and is outside this workflow.
+# Legacy LibreOffice recalculation needs an external application and is not used.

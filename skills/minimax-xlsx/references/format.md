@@ -519,6 +519,8 @@ For consecutive rows of the same type, row-level default styles can be used to r
 # Style audit (optional, audit the entire unpacked directory after formatting is complete)
 python3 SKILL_DIR/scripts/style_audit.py /tmp/xlsx_fmt/unpacked/
 
+# Legacy heuristic scan only; not calculation evidence (Python 3.10+).
+# The maintained stdlib workflow and acceptance rules are in validate.md.
 # Formula error static scan (must specify a single .xlsx file, does not accept directories)
 # Pack first, then scan:
 python3 SKILL_DIR/scripts/xlsx_pack.py /tmp/xlsx_fmt/unpacked/ /tmp/output.xlsx
@@ -757,12 +759,12 @@ In the assumptions area (Assumptions sheet or assumptions block), organize assum
 
 Before outputting the final file, confirm each item:
 
-- [ ] Formula rows contain no hard-coded values (can use `formula_check.py` to scan the packaged `.xlsx` file)
+- [ ] Editable models retain formulas; static reports identify their non-updating values. A static formula scan cannot establish this intent.
 - [ ] Year columns display as 2024 not 2,024 (numFmtId="1", format `0`)
 - [ ] Negative numbers display as (1,234) not -1,234 (use parenthetical style for externally delivered financial reports)
 - [ ] Zero values display as `-` in sparse rows rather than `0` (formatCode third segment is `"-"`)
 - [ ] Growth rates and percentages are stored as decimals (0.08 = 8%), format is `0.0%`
 - [ ] All cross-sheet reference cells use green font (style index 3 or an appended green + number format combination)
 - [ ] Assumptions block and model block are clearly separated (different sheets or separated by empty rows within the same sheet)
-- [ ] Summary rows use `SUM()` formulas, not manually hard-coded totals
+- [ ] Editable models use `SUM()` for summary rows; static reports use verified Python totals.
 - [ ] Balance verification: summary rows = sum of their respective line items (a check row can be added at the end of the model to verify)

@@ -20,7 +20,7 @@
 | `gif-sticker-maker` | 将照片（人物、宠物、物品、Logo）转换为 4 张带字幕的动画 GIF 贴纸。Funko Pop / Pop Mart 盲盒风格，基于 MiniMax 图片与视频生成 API。 | Official |
 | `minimax-pdf` | 基于 token 化设计系统生成、填写和重排 PDF 文档。支持三种模式：CREATE（从零生成，15 种封面风格）、FILL（填写现有表单字段）、REFORMAT（将已有文档重排为新设计）。排版与配色由文档类型自动推导，输出即可打印。 | Official |
 | `pptx-generator` | 生成、编辑和读取 PowerPoint 演示文稿。支持用 PptxGenJS 从零创建（封面、目录、内容、分节页、总结页），通过 XML 工作流编辑现有 PPTX，或用 markitdown 提取文本。 | Official |
-| `minimax-xlsx` | 打开、创建、读取、分析、编辑或验证 Excel/电子表格文件（.xlsx、.xlsm、.csv、.tsv）。支持通过 XML 模板从零创建 xlsx、使用 pandas 读取分析、零格式损失编辑现有文件、公式重算与验证、专业财务格式化。 | Official |
+| `minimax-xlsx` | 仅用 Python 标准库读取、新建和局部编辑 XLSX/XLSM，读取 CSV/TSV，计算明确支持的公式子集，生成静态结果或带公式缓存的报表；无需 Office 或 pip 依赖。 | Official |
 | `minimax-docx` | 基于 OpenXML SDK（.NET）的专业 DOCX 文档创建、编辑与排版。三条流水线：从零创建新文档、填写/编辑现有文档内容、应用模板格式并通过 XSD 验证门控检查。 | Official |
 | `vision-analysis` | 使用视觉 AI 模型分析、描述和提取图像信息。支持描述、OCR 文字识别、UI 界面审查、图表数据提取和物体检测。基于 MiniMax VL API，OpenAI GPT-4V 作为备选。 | Community |
 | `minimax-multimodal-toolkit` | 通过 MiniMax API 生成语音、音乐、视频和图片内容 — MiniMax 多模态使用场景的统一入口。涵盖 TTS（文字转语音、声音克隆、声音设计、多段合成）、音乐（带词歌曲、纯音乐）、视频（文生视频、图生视频、首尾帧、主体参考、模板、长视频多场景）、图片（文生图、图生图含角色参考），以及基于 FFmpeg 的媒体处理（格式转换、拼接、裁剪、提取）。 | Official |
