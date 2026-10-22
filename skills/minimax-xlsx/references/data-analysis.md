@@ -95,3 +95,6 @@ the original template, then verify sheets, values, formulas and formatting. Rena
 is not conversion. No application is launched and no conversion happens automatically.
 The inspector exits 0 for a completed diagnosis, including unsupported/invalid contents;
 inspect JSON `status` and `parser_supported`. File I/O failure returns exit 1.
+
+Ranges must be nonempty coordinate strings. Query byte limits are enforced during reads;
+excessive JSON nesting returns structured failure without a Python traceback.

@@ -10,7 +10,7 @@ from xml.etree import ElementTree as ET
 import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from stdlib_xlsx import Workbook, address
+from stdlib_xlsx import Workbook, NS, address, xml
 from xlsx_analysis import typed_value, is_blank
 from xlsx_headers import reconstruct
 from xlsx_tabular import column_name
@@ -52,13 +52,14 @@ def suggest(source, sheet, scan_rows=32, scan_columns=32, max_depth=4):
             blocks.append({'first': row, 'last': row})
         else:
             blocks[-1]['last'] = row
+    merge_nodes = xml(book.parts[book.sheets[sheet]]).findall(NS+'mergeCells/'+NS+'mergeCell')
     candidates = []
     rejected = 0
     for block_index, block in enumerate(blocks):
         for start in range(block['first'], block['last']):
             for end in range(start, min(start+max_depth-1,block['last']-1)+1):
                 try:
-                    schema = reconstruct(book, sheet, (1,1,last_row,last_col), '%d:%d' % (start,end), read_cell)
+                    schema = reconstruct(book, sheet, (1,1,last_row,last_col), '%d:%d' % (start,end), read_cell, merge_nodes=merge_nodes)
                 except ValueError:
                     rejected += 1
                     continue

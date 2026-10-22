@@ -74,7 +74,8 @@ For new files, template style indices are: 0 default, 1 input, 2 formula, 3 cros
 4 header, 5 currency input, 6 currency result, 7 percentage input, 8 percentage result,
 9 integer input, 10 integer result, 11 year, 12 highlighted assumption. Currency styles
 5/6 display whole dollars. For existing files, indices refer to that file's own styles.
-Omitting style preserves an existing cell's style. The CLI does not create custom styles.
+Omitting style preserves an existing cell's style. New-workbook [appearance presets](readable-appearance.md) can append shared readable
+styles and formats; existing-file edits cannot create arbitrary custom styles.
 
 ## Formula subset
 
@@ -140,8 +141,11 @@ Use `csv`, `collections`, `statistics` and ordinary Python loops for analysis. W
 computed static results through `value`, and explain their non-updating nature.
 Do not wrap an arbitrary formula string in Python eval/exec.
 
-The Python API is `Workbook.create(spec)`, `Workbook.load(path)`, `patch(spec)`,
+The Python API is `Workbook.create(spec, appearance=None)`, `Workbook.load(path)`, `patch(spec)`,
 `calculate(values_only=False)`, `save(path)`, `inspect()`. Import from the resolved scripts
 directory. `calculate` returns a report; do not call save if status is failed. It rewrites
 formula caches but does not refresh the in-memory inspection index; reopen the saved
 file to inspect results. Caller-supplied caches are never accepted through the JSON API.
+
+JSON input exceeding the parser nesting depth returns a structured failure. Bounded query
+readers also enforce byte limits on actual reads, not only filesystem size metadata.

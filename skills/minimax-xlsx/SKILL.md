@@ -41,6 +41,12 @@ context compaction. Verify the actual output and available delivery mechanism se
 
 | Task | Action | Reference |
 |---|---|---|
+| Build a static management dashboard from a native wide report | `xlsx_dashboard.py`; optional `--xlsx` | [management-dashboard.md](references/management-dashboard.md) |
+| Roll leaf institutions up a validated static hierarchy | `xlsx_management.py` with hierarchy config | [institution-hierarchy.md](references/institution-hierarchy.md) |
+| Compute explicit daily means or month/YTD daily-flow sums | `xlsx_daily.py average` / `accumulate` | [daily-analysis.md](references/daily-analysis.md) |
+| Build configured management wide reports | `xlsx_management.py`; optional `--xlsx` | [management-wide.md](references/management-wide.md) |
+| Export known analysis JSON to readable XLSX | `xlsx_result_export.py` | [result-export.md](references/result-export.md) |
+| Rank observations and calculate group shares | `xlsx_rank_share.py` | [rank-share.md](references/rank-share.md) |
 | Compute median, quantiles and variance/stddev | `xlsx_advanced.py describe` | [advanced-statistics.md](references/advanced-statistics.md) |
 | Compare explicit monthly periods | `xlsx_advanced.py compare` | [period-comparison.md](references/period-comparison.md) |
 | Match tables by typed composite keys | `xlsx_match.py` | [table-matching.md](references/table-matching.md) |
@@ -51,6 +57,7 @@ context compaction. Verify the actual output and available delivery mechanism se
 | Diagnose file contents or ET/ETT candidates | `xlsx_identify.py` | [data-analysis.md](references/data-analysis.md) |
 | Import CSV/TSV or export a worksheet/range | `xlsx_tabular.py import` / `export` | [tabular-interchange.md](references/tabular-interchange.md) |
 | Inspect XLSX/XLSM or CSV/TSV | `read` | [read-analyze.md](references/read-analyze.md) |
+| Style a newly created table for readability | `create --appearance` / `import --appearance` | [readable-appearance.md](references/readable-appearance.md) |
 | Create a report | JSON specification → `create` | [create.md](references/create.md) |
 | Fill or correct existing cells | JSON patch → `edit` | [edit.md](references/edit.md) |
 | Compute supported formulas in an existing file | `calculate` to a new file | [python-calculation.md](references/python-calculation.md) |
@@ -87,7 +94,8 @@ worksheet XML is serialized again; full-file byte identity or arbitrary feature
 compatibility is not promised. Formula caches across sheets may change when an input
 changes. Calculation-chain metadata may be removed and recalculation requested.
 
-Only cell values, formulas and existing style indices are editable through the CLI.
+Only cell values, formulas and existing style indices are editable in existing files.
+New workbooks may opt into readable appearance presets; these are never applied to edits.
 Do not insert/delete/move rows, columns or sheets. Editing a sheet containing shared,
 array or other specially attributed formulas is refused. Macro parts can be retained
 in XLSM files, but macros are never run. Charts and pivots are retained, not refreshed.

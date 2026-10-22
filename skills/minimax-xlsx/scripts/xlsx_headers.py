@@ -25,7 +25,7 @@ def header_bounds(spec, first_row, last_row):
     return start, end
 
 
-def reconstruct(book, sheet, bounds, header_rows, read_cell, exclude=(), include_spanning=False):
+def reconstruct(book, sheet, bounds, header_rows, read_cell, exclude=(), include_spanning=False, merge_nodes=None):
     r1, c1, r2, c2 = bounds
     start, end = header_bounds(header_rows, r1, r2)
     if any(type(row) is not int or not start <= row <= end for row in exclude):
@@ -33,8 +33,10 @@ def reconstruct(book, sheet, bounds, header_rows, read_cell, exclude=(), include
     excluded = set(exclude)
     if len(excluded) == end-start+1:
         raise ValueError('At least one header row must remain')
-    tree = xml(book.parts[book.sheets[sheet]])
-    merges = tree.findall(NS + 'mergeCells/' + NS + 'mergeCell')
+    if merge_nodes is None:
+        tree = xml(book.parts[book.sheets[sheet]])
+        merge_nodes = tree.findall(NS + 'mergeCells/' + NS + 'mergeCell')
+    merges = merge_nodes
     if len(merges) > 10000:
         raise ValueError('More than 10000 merged regions')
     occupied = {}

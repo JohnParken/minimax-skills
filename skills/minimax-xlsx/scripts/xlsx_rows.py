@@ -3,7 +3,7 @@
 """Filter, deduplicate and stably sort typed worksheet rows into JSON."""
 import argparse
 from collections import Counter
-from decimal import Decimal, DecimalException
+from decimal import DecimalException
 import json
 from pathlib import Path
 import sys
@@ -13,27 +13,14 @@ import zipfile
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from xlsx_analysis import region, validate_query, matches, is_blank
 from xlsx_headers import resolve_column
+from stdlib_xlsx import read_spec
 
 MAX_QUERY_BYTES = 65536
 TYPE_ORDER = {'boolean': 0, 'number': 1, 'date_text': 2, 'text': 3}
 
 
 def read_query(path):
-    with open(path, 'rb') as handle:
-        data = handle.read(MAX_QUERY_BYTES + 1)
-    if len(data) > MAX_QUERY_BYTES:
-        raise ValueError('Query exceeds 64 KiB')
-    def pairs(items):
-        result = {}
-        for key, value in items:
-            if key in result:
-                raise ValueError('Duplicate JSON key: ' + key)
-            result[key] = value
-        return result
-    def reject(value):
-        raise ValueError('Invalid JSON number: ' + value)
-    return json.loads(data.decode('utf-8-sig'), parse_float=Decimal,
-                      parse_constant=reject, object_pairs_hook=pairs)
+    return read_spec(path, max_bytes=MAX_QUERY_BYTES)
 
 
 def validate_config(config, columns, schema=None):
@@ -110,7 +97,7 @@ def select_rows(source, sheet, config, cell_range=None, header=True, formulas='r
         selected = blanks + values if item.get('blanks', 'last') == 'first' else values + blanks
     def encode(item):
         return {'type': item[0], 'value': item[1]}
-    return {'status': 'selected', **metadata, 'columns': columns,
+    return {'status': 'selected', **metadata, 'requested_query': config, 'columns': columns,
             'headers': None if headers is None else [encode(item) for item in headers],
             'filtered_out_rows': len(rows)-filtered_count, 'removed_duplicate_rows': removed,
             'duplicate_key_groups': duplicate_groups, 'output_rows': len(selected),

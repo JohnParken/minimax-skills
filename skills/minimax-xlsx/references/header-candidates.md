@@ -42,3 +42,6 @@ remain available regardless of candidate ranking. See [multi-level-headers.md](m
 Exit 0 means diagnosis completed, including ambiguous/empty results. Exit 1 returns JSON
 `status: failed` for input/runtime errors. No real Excel/WPS application testing or
 reliable automatic interpretation of arbitrary layouts is implied by these suggestions.
+
+Merge structure is parsed once and reused across candidate ranges; all per-candidate
+geometry checks remain active. No suggested boundary is applied automatically.

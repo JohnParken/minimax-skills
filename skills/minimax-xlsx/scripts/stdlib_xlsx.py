@@ -115,7 +115,7 @@ class Workbook:
         return cls(parts, {i.filename: i for i in infos})
 
     @classmethod
-    def create(cls, spec):
+    def create(cls, spec, appearance=None):
         sheets = validate_spec(spec)
         template = Path(__file__).resolve().parent.parent / "assets" / "minimal_xlsx"
         parts = {p.relative_to(template).as_posix(): p.read_bytes()
@@ -152,6 +152,11 @@ class Workbook:
         parts["[Content_Types].xml"] = encoded_xml(types)
         book = cls(parts)
         book.patch(spec)
+        book._created_here = True
+        book.appearance_report = None
+        if appearance is not None:
+            from xlsx_appearance import apply_appearance
+            book.appearance_report = apply_appearance(book, appearance, spec)
         return book
 
     def _index(self):
@@ -518,7 +523,7 @@ def validate_spec(spec):
     return spec["sheets"]
 
 
-def read_spec(path):
+def read_spec(path, max_bytes=None):
     def pairs(items):
         result = {}
         for key, value in items:
@@ -528,8 +533,20 @@ def read_spec(path):
         return result
     def reject(value):
         raise ValueError("Invalid JSON number: " + value)
-    with open(path, encoding="utf-8") as handle:
-        return json.load(handle, parse_float=Decimal, parse_constant=reject, object_pairs_hook=pairs)
+    try:
+        if max_bytes is None:
+            with open(path, encoding="utf-8") as handle:
+                return json.load(handle, parse_float=Decimal, parse_constant=reject, object_pairs_hook=pairs)
+        if type(max_bytes) is not int or max_bytes < 1:
+            raise ValueError("JSON byte limit must be a positive integer")
+        with open(path, "rb") as handle:
+            data = handle.read(max_bytes + 1)
+        if len(data) > max_bytes:
+            raise ValueError("JSON query exceeds byte limit: " + str(max_bytes))
+        return json.loads(data.decode("utf-8-sig"), parse_float=Decimal,
+                          parse_constant=reject, object_pairs_hook=pairs)
+    except RecursionError as exc:
+        raise ValueError("JSON nesting exceeds supported parser depth") from exc
 
 
 def main():
@@ -547,6 +564,7 @@ def main():
             sub.add_argument("spec", help="JSON sheet/cell specification")
         sub.add_argument("output")
         if name == "create":
+            sub.add_argument("--appearance", help="Readable appearance JSON; new workbooks only")
             sub.add_argument("--values-only", action="store_true", help="Replace all successfully evaluated formulas with static results")
     args = parser.parse_args()
     try:
@@ -564,10 +582,13 @@ def main():
             else:
                 result = Workbook.load(args.input).inspect()
         else:
-            book = Workbook.create(read_spec(args.spec)) if args.command == "create" else Workbook.load(args.input)
+            appearance = read_spec(args.appearance, max_bytes=65536) if args.command == "create" and args.appearance else None
+            book = Workbook.create(read_spec(args.spec), appearance=appearance) if args.command == "create" else Workbook.load(args.input)
             if args.command == "edit":
                 book.patch(read_spec(args.spec))
             result = book.calculate(values_only=getattr(args, "values_only", False))
+            if getattr(book, "appearance_report", None) is not None:
+                result["appearance"] = book.appearance_report
             if result["status"] != "failed":
                 book.save(args.output)
                 result["output_written"] = True

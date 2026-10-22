@@ -11,9 +11,9 @@ Choose the output behavior:
 
 Do not invent data or formula caches. Label assumptions and units. Preserve required
 column/sheet names. For financial styling consult [format.md](format.md); select template
-style indices deliberately. The CLI does not set custom column widths, merges or charts.
-Such XML extensions require separate implementation and validation, not a claim that
-all Excel features are supported.
+style indices deliberately. For new-workbook pale-blue headers, row/category banding,
+header merges, explicit widths and freezing, use [readable-appearance.md](readable-appearance.md).
+Charts, auto-fit and arbitrary layout editing remain unsupported.
 
 Check the calculation report, reopen the output with `read`, verify expected sheet names,
 input values and independently known results. Explain static outputs and unresolved

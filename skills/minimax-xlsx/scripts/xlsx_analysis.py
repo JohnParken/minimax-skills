@@ -64,7 +64,9 @@ def region(source, sheet, cell_range=None, header=True, formulas='reject',
     if sheet not in book.cells:
         raise ValueError('Unknown worksheet: ' + sheet)
     cells = book.cells[sheet]
-    if cell_range:
+    if cell_range is not None:
+        if not isinstance(cell_range, str) or not cell_range:
+            raise ValueError('Range must be a nonempty A1 or A1:C10 string')
         ends = cell_range.split(':')
         if len(ends) not in (1, 2):
             raise ValueError('Range must be A1 or A1:C10')
@@ -115,6 +117,9 @@ def region(source, sheet, cell_range=None, header=True, formulas='reject',
                 'precision': 'exact sums up to 1000 digits; means 34 significant digits, ROUND_HALF_EVEN',
                 'decimals': 'JSON strings; use type tags to distinguish numbers from text',
                 'visibility': 'includes hidden rows/columns and filtered-out rows; merges are not expanded'}
+    if schema is None and headers is not None:
+        metadata['column_headers'] = [{'column':col,'type':item[0],'value':item[1],
+                                       'coordinate':col+str(r1)} for col,item in zip(columns,headers)]
     if schema is not None:
         metadata['header_schema'] = schema
     return columns, headers, rows, metadata
@@ -241,7 +246,7 @@ def summarize(source, sheet, query, cell_range=None, header=True, formulas='reje
                        'rows': bucket['rows'], 'blank_measure': bucket['blank'],
                        'ignored_non_numeric': bucket['ignored'],
                        'numeric': None if measure is None else statistics(bucket['values'])})
-    return {'status': 'summarized', **metadata, 'selected_rows': selected,
+    return {'status': 'summarized', **metadata, 'requested_query': query, 'selected_rows': selected,
             'excluded_rows': len(rows)-selected, 'group_by': group_columns, 'measure': measure,
             'mixed': mixed, 'groups': result}
 
@@ -268,9 +273,7 @@ def main():
         else:
             if not args.query:
                 raise ValueError('summarize requires --query')
-            if Path(args.query).stat().st_size > 65536:
-                raise ValueError('Query exceeds 64 KiB')
-            result = summarize(args.input, args.sheet, read_spec(args.query), args.cell_range, not args.no_header, args.formulas,
+            result = summarize(args.input, args.sheet, read_spec(args.query, max_bytes=65536), args.cell_range, not args.no_header, args.formulas,
                              args.header_rows, args.header_exclude, args.include_spanning_headings)
         print(json.dumps(result, ensure_ascii=False, default=str))
         return 0

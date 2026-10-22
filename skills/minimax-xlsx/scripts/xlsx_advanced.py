@@ -132,7 +132,7 @@ def describe(source,sheet,config,**options):
                 result['variance'][mode]={'status':'insufficient_numeric_samples','ddof':1 if mode=='sample' else 0,
                                           'variance':None,'standard_deviation':None}
         output.append(result)
-    return {'status':'described',**metadata,'columns':output,'missing':missing,'non_numeric':non_numeric,
+    return {'status':'described',**metadata,'requested_query':config,'columns':output,'missing':missing,'non_numeric':non_numeric,
             'quantile_algorithm':'Hyndman-Fan type 7; h=(n-1)*p, linear interpolation',
             'arithmetic':{'exact_precision_limit':1000,'result_precision':precision,
                           'intermediate_precision':precision+16,'rounding':'ROUND_HALF_EVEN',

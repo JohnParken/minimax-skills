@@ -3,6 +3,7 @@
 """Explicit, bounded CSV/TSV interchange using the local OOXML implementation."""
 import argparse
 import csv
+from copy import deepcopy
 import io
 import json
 import re
@@ -13,7 +14,7 @@ from xml.etree import ElementTree as ET
 import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from stdlib_xlsx import Workbook, MAX_CELLS, address, numeric
+from stdlib_xlsx import Workbook, MAX_CELLS, address, numeric, read_spec
 
 MAX_INPUT_BYTES = 16 * 1024 * 1024
 
@@ -33,7 +34,7 @@ def delimiter(path):
     return '\t' if suffix == '.tsv' else ','
 
 
-def import_table(source, output, sheet='Sheet1', encoding='utf-8-sig', numeric_columns=(), header_rows=1):
+def import_table(source, output, sheet='Sheet1', encoding='utf-8-sig', numeric_columns=(), header_rows=1, appearance=None):
     """Import literal text; convert only explicitly selected column letters."""
     if type(header_rows) is not int or not 0 <= header_rows <= 1048576:
         raise ValueError('header_rows must be between 0 and 1048576')
@@ -73,10 +74,14 @@ def import_table(source, output, sheet='Sheet1', encoding='utf-8-sig', numeric_c
         raise ValueError('Empty tabular input')
     if any(col > width for col in columns):
         raise ValueError('Numeric column lies outside input table')
-    book = Workbook.create({'sheets': [{'name': sheet, 'cells': cells}]})
+    if isinstance(appearance,dict) and isinstance(appearance.get('sheets'),dict) and isinstance(appearance['sheets'].get(sheet),dict):
+        appearance = deepcopy(appearance)
+        appearance['sheets'][sheet].setdefault('header_rows', None if header_rows==0 else '1:'+str(min(header_rows,rows)))
+    book = Workbook.create({'sheets': [{'name': sheet, 'cells': cells}]}, appearance=appearance)
     book.save(output)
     return {'status': 'imported', 'rows': rows, 'columns': width, 'output_written': True,
-            'numeric_columns': sorted(columns), 'formulas_created': 0}
+            'numeric_columns': sorted(columns), 'formulas_created': 0,
+            'appearance': book.appearance_report}
 
 
 def export_table(source, output, sheet, cell_range=None, formula_mode='reject', text_mode='safe'):
@@ -153,6 +158,7 @@ def main():
     load.add_argument('--encoding', default='utf-8-sig')
     load.add_argument('--numeric-columns', nargs='*', default=[])
     load.add_argument('--header-rows', type=int, default=1)
+    load.add_argument('--appearance', help='Readable appearance JSON; new XLSX output only')
     export = commands.add_parser('export')
     export.add_argument('input')
     export.add_argument('output')
@@ -164,7 +170,8 @@ def main():
     try:
         if args.command == 'import':
             result = import_table(args.input, args.output, args.sheet, args.encoding,
-                                  args.numeric_columns, args.header_rows)
+                                  args.numeric_columns, args.header_rows,
+                                  read_spec(args.appearance,max_bytes=65536) if args.appearance else None)
         else:
             result = export_table(args.input, args.output, args.sheet, args.cell_range,
                                   args.formulas, args.text)

@@ -1,0 +1,28 @@
+{
+  "entity_keys": [
+    "A"
+  ],
+  "columns": {
+    "metric": "B",
+    "date": "C",
+    "value": "D",
+    "unit": "E",
+    "currency": "F",
+    "version": "G",
+    "basis": "H"
+  },
+  "metrics": [
+    {
+      "metric_id": "income",
+      "label": "虚构每日发生额",
+      "unit": "万元",
+      "kind": "flow",
+      "time_basis": "daily_flow"
+    }
+  ],
+  "date_format": "YYYY-MM-DD",
+  "start": "2024-01-01",
+  "end": "2024-01-03",
+  "definition_version": "v1",
+  "coverage": "complete"
+}

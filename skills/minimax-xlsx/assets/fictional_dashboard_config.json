@@ -1,0 +1,9 @@
+{
+  "overview_period":"2025-01",
+  "metrics":["balance","risk_rate"],
+  "ranks":{"balance":{"method":"competition","descending":true}},
+  "trend_metrics":["balance"],
+  "thresholds":[{"metric_id":"risk_rate","field":"actual","op":"gt","value":5,
+    "unit":"%","severity":"虚构管理关注",
+    "scope":{"currency":"CNY","version":"v1","report_level":"branch"}}]
+}

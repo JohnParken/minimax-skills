@@ -23,7 +23,8 @@ is one header row. Use `--header-rows 0` for headerless data. Empty fields stay 
 strings. Numeric syntax accepts decimal or scientific notation, not grouping separators,
 currency symbols or percentages. Invalid numeric cells fail with their address.
 More than 15 significant digits are refused in numeric columns; use text for identifiers.
-Numeric display is General: `19.90` may display as `19.9`, although the stored number
+Numeric display defaults to General; optional new-file [appearance](readable-appearance.md)
+can set display formats. `19.90` may otherwise display as `19.9`, although the stored number
 is preserved. Text fields retain original whitespace and spelling.
 
 Example input:

@@ -1,0 +1,139 @@
+{
+  "dimensions": {
+    "period": "A",
+    "institution": "B",
+    "line": "C",
+    "currency": "D",
+    "version": "E",
+    "product": "F"
+  },
+  "dimension_labels": {
+    "period": "期间",
+    "institution": "机构",
+    "line": "条线",
+    "currency": "币种",
+    "version": "口径版本",
+    "product": "产品"
+  },
+  "row_dimensions": [
+    "period",
+    "institution",
+    "line",
+    "currency",
+    "version"
+  ],
+  "fact_grain": [
+    "period",
+    "institution",
+    "line",
+    "currency",
+    "version",
+    "product",
+    "metric_id"
+  ],
+  "metric_column": "G",
+  "value_column": "H",
+  "unit_column": "I",
+  "basis_column": "K",
+  "record_scope": {
+    "column": "J",
+    "value": "leaf",
+    "report_level": "branch"
+  },
+  "definition_version": "v1",
+  "period_format": "YYYY-MM",
+  "metrics": [
+    {
+      "metric_id": "balance",
+      "label": "虚构贷款余额",
+      "unit": "万元",
+      "kind": "stock",
+      "time_basis": "point_in_time",
+      "aggregation": "SUM",
+      "additive_dimensions": [
+        "product",
+        "institution"
+      ]
+    },
+    {
+      "metric_id": "bad",
+      "label": "虚构不良余额",
+      "unit": "万元",
+      "kind": "stock",
+      "time_basis": "point_in_time",
+      "aggregation": "SUM",
+      "additive_dimensions": [
+        "product",
+        "institution"
+      ]
+    },
+    {
+      "metric_id": "risk_rate",
+      "label": "虚构不良比率",
+      "unit": "%",
+      "kind": "ratio",
+      "time_basis": "ratio",
+      "aggregation": "RATIO",
+      "additive_dimensions": [],
+      "numerator": "bad",
+      "denominator": "balance",
+      "scale": 100
+    },
+    {
+      "metric_id": "income",
+      "label": "虚构当月收入",
+      "unit": "万元",
+      "kind": "flow",
+      "time_basis": "period_flow",
+      "aggregation": "SUM",
+      "additive_dimensions": [
+        "product",
+        "institution"
+      ]
+    }
+  ],
+  "missing": "propagate",
+  "precision": 34,
+  "targets": [],
+  "hierarchy": {
+    "mapping_version": "fictional-tree-v1",
+    "valid_from": "2025-01",
+    "valid_to": "2025-12",
+    "levels": [
+      "bank",
+      "region",
+      "branch"
+    ],
+    "report_levels": [
+      "bank",
+      "region",
+      "branch"
+    ],
+    "nodes": [
+      {
+        "id": "ROOT",
+        "parent": null,
+        "level": "bank",
+        "name": "虚构总行"
+      },
+      {
+        "id": "R",
+        "parent": "ROOT",
+        "level": "region",
+        "name": "虚构区域"
+      },
+      {
+        "id": "00012345678901234567890",
+        "parent": "R",
+        "level": "branch",
+        "name": "虚构甲支行"
+      },
+      {
+        "id": "0002",
+        "parent": "R",
+        "level": "branch",
+        "name": "虚构乙支行"
+      }
+    ]
+  }
+}
