@@ -1,0 +1,77 @@
+{
+  "left": {
+    "sheet": "Observed",
+    "columns": {
+      "account": "A",
+      "customer": "B",
+      "institution": "C",
+      "product": "D",
+      "holding": "E",
+      "period": "F",
+      "version": "G",
+      "level": "H",
+      "scope": "I",
+      "owner": "J"
+    }
+  },
+  "right": {
+    "sheet": "Observed",
+    "columns": {
+      "account": "A",
+      "customer": "B",
+      "institution": "C",
+      "product": "D",
+      "holding": "E",
+      "period": "F",
+      "version": "G",
+      "level": "H",
+      "scope": "I",
+      "owner": "J"
+    }
+  },
+  "periods": {
+    "left": "2025-01",
+    "right": "2025-02"
+  },
+  "scope": {
+    "level": "branch",
+    "version": "v1",
+    "definition_version": "definition-v1",
+    "observation_scope": "fictional-selected-universe",
+    "completeness": "declared_complete"
+  },
+  "institutions": [
+    {
+      "id": "A",
+      "level": "branch",
+      "peer_group": "small"
+    },
+    {
+      "id": "B",
+      "level": "branch",
+      "peer_group": "large"
+    }
+  ],
+  "ownership": "designated",
+  "categories": [
+    {
+      "id": "deposit",
+      "label": "存款产品"
+    },
+    {
+      "id": "payments",
+      "label": "支付产品"
+    }
+  ],
+  "product_mapping": {
+    "P1": [
+      "deposit",
+      "payments"
+    ],
+    "P2": [
+      "deposit"
+    ]
+  },
+  "coverage_denominator": "observed_customers",
+  "fact_grain": "account_product"
+}

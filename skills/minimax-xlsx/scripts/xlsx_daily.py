@@ -44,7 +44,7 @@ def windows(days,operation,periods):
     return output
 
 
-def summarize(source,sheet,config,operation='average',**options):
+def summarize(source,sheet,config,operation='average',minimum_value=None,**options):
     allowed={'entity_keys','columns','metrics','start','end','date_format','definition_version','coverage','outside','filters','periods','precision'}
     if not isinstance(config,dict) or set(config)-allowed or operation not in ('average','accumulate'):
         raise ValueError('Unknown daily operation/configuration')
@@ -65,6 +65,8 @@ def summarize(source,sheet,config,operation='average',**options):
             raise ValueError('periods must be unique month/ytd entries')
         if 'ytd' in periods and (start.month,start.day)!=(1,1):
             raise ValueError('YTD requires an interval beginning January 1; partial years are not relabelled YTD')
+    if minimum_value is not None and (isinstance(minimum_value,bool) or not isinstance(minimum_value,(int,Decimal)) or not Decimal(minimum_value).is_finite()):
+        raise ValueError('Internal minimum_value must be a finite numeric bound')
     precision=precision_option(config); version=required_text(config.get('definition_version'),'definition_version')
     dictionary=config.get('metrics')
     if not isinstance(dictionary,list) or not 1<=len(dictionary)<=20:
@@ -122,6 +124,8 @@ def summarize(source,sheet,config,operation='average',**options):
         if is_blank(value): numeric=None
         elif value[0]!='number': raise ValueError('Daily values must be numeric without text coercion at row '+str(row_number))
         else: numeric=value[1]
+        if numeric is not None and minimum_value is not None and numeric<minimum_value:
+            raise ValueError('Negative daily deposit balances are outside this module scope at row '+str(row_number))
         groups[key][day]=(row_number,numeric)
     days=[start+timedelta(days=index) for index in range(length)]
     periods_to_emit=windows(days,operation,periods)

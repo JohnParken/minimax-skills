@@ -1,0 +1,60 @@
+{
+  "sheet": "Contracts",
+  "columns": {
+    "contract": "A",
+    "principal": "B",
+    "maturity_date": "C",
+    "observation_date": "D",
+    "institution": "E",
+    "currency": "F",
+    "unit": "G",
+    "version": "H",
+    "level": "I",
+    "status": "J"
+  },
+  "observation_date": "2024-02-28",
+  "scope": {
+    "currency": "CNY",
+    "unit": "元",
+    "version": "v1",
+    "definition_version": "v1",
+    "level": "branch",
+    "completeness": "declared_complete"
+  },
+  "institutions": [
+    "A",
+    "B"
+  ],
+  "status_mapping": {
+    "active": "include",
+    "closed": "exclude"
+  },
+  "buckets": [
+    {
+      "id": "days_1_7",
+      "min_days": 1,
+      "max_days": 7
+    },
+    {
+      "id": "days_8_30",
+      "min_days": 8,
+      "max_days": 30
+    },
+    {
+      "id": "days_31_90",
+      "min_days": 31,
+      "max_days": 90
+    },
+    {
+      "id": "days_91_plus",
+      "min_days": 91,
+      "max_days": null
+    }
+  ],
+  "cumulative_windows": [
+    7,
+    30,
+    90
+  ],
+  "share_denominator": "eligible_total_principal"
+}

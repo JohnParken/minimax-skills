@@ -1,0 +1,39 @@
+{
+  "grain": "account",
+  "left": {
+    "sheet": "Snapshots",
+    "columns": {
+      "entity": "A",
+      "institution": "B",
+      "product": "C",
+      "balance": "D",
+      "currency": "E",
+      "unit": "F",
+      "version": "G",
+      "date": "H",
+      "level": "I"
+    }
+  },
+  "right": {
+    "sheet": "Snapshots",
+    "columns": {
+      "entity": "A",
+      "institution": "B",
+      "product": "C",
+      "balance": "D",
+      "currency": "E",
+      "unit": "F",
+      "version": "G",
+      "date": "H",
+      "level": "I"
+    }
+  },
+  "left_date": "2024-02-28",
+  "right_date": "2024-03-01",
+  "scope": {
+    "currency": "CNY",
+    "unit": "万元",
+    "version": "v1",
+    "level": "branch"
+  }
+}

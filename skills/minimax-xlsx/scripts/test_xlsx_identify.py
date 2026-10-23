@@ -41,11 +41,22 @@ class IdentifyTests(unittest.TestCase):
         struct.pack_into('<H', data, 30, 9)
         self.path.write_bytes(data)
         report = identify(self.path)
-        self.assertEqual(report['status'], 'conversion_required')
+        self.assertEqual(report['status'], 'invalid_or_unsupported')
+        self.assertTrue(report['header_consistent'])
         self.assertEqual(report['container'], 'compound_binary')
         self.assertFalse(report['native_et_ett_parsed'])
         self.path.write_bytes(COMPOUND_SIGNATURE)
         self.assertEqual(identify(self.path)['status'], 'invalid')
+
+    def test_synthetic_compound_probe_is_not_et_ett_acceptance(self):
+        from test_xlsx_cfb import synthetic_cfb
+        self.path.write_bytes(synthetic_cfb({'Workbook':b'not a real workbook'}))
+        report=identify(self.path)
+        self.assertEqual(report['status'],'conversion_required')
+        self.assertEqual(report['container_status'],'container_readable')
+        self.assertEqual(report['support_level'],'cfb_container_only')
+        self.assertFalse(report['parser_supported']); self.assertFalse(report['biff_parsed'])
+        self.assertFalse(report['native_et_ett_parsed'])
 
     def test_unknown_empty_damaged_and_generic_zip(self):
         for content, status in ((b'not a spreadsheet', 'unrecognized'), (b'', 'invalid'),

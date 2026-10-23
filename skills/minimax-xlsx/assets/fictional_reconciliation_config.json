@@ -1,0 +1,7 @@
+{
+  "left_period":"2025-01", "right_period":"2025-02",
+  "keys":["institution","line","currency","version","report_level"],
+  "metrics":["balance"], "group_by":["institution"],
+  "scope":{"currency":"CNY","version":"v1","report_level":"branch"},
+  "tolerance":0.01, "precision":34
+}

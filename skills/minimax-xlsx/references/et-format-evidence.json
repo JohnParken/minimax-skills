@@ -1,0 +1,150 @@
+{
+  "checked_on": "2026-10-22",
+  "purpose": "Bibliographic provenance only; no runtime network dependency or copied parser code",
+  "sources": [
+    {
+      "title": "Microsoft MS-CFB",
+      "url": "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-cfb/53989ce4-7b05-4f8d-829b-d08d6148375b"
+    },
+    {
+      "title": "CFB header",
+      "url": "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-cfb/05060311-bfce-4b12-874d-71fd4ce63aea"
+    },
+    {
+      "title": "directory entry",
+      "url": "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-cfb/60fe8611-66c3-496b-b70d-a504c94c9ace"
+    },
+    {
+      "title": "SheetJS format documentation",
+      "url": "https://docs.sheetjs.com/docs/miscellany/formats/"
+    },
+    {
+      "title": "SheetJS repository/license",
+      "url": "https://github.com/SheetJS/sheetjs"
+    },
+    {
+      "title": "olefile API",
+      "url": "https://olefile.readthedocs.io/en/latest/Howto.html"
+    },
+    {
+      "title": "license",
+      "url": "https://olefile.readthedocs.io/en/latest/License.html"
+    },
+    {
+      "title": "libwps upstream",
+      "url": "https://sourceforge.net/p/libwps/wiki/Home/"
+    },
+    {
+      "title": "WPS format list",
+      "url": "https://open.wps.cn/documents/app-integration-dev/docs-center/online-preview-edit/format"
+    }
+  ],
+  "format_basis": {
+    "CFB": "Microsoft MS-CFB revision 12.0, published 2024-04-23",
+    "ET": "SheetJS describes BIFF8 plus proprietary extensions; not an all-version ET/ETT specification",
+    "ETT": "No verified version-specific binary layout or real sample"
+  },
+  "licenses_reviewed": {
+    "SheetJS CE": "Apache-2.0; no code copied",
+    "olefile": "BSD-style terms with inherited PIL notice; no code copied",
+    "implementation_and_synthetic_tests": "Original repository code, SPDX MIT"
+  },
+  "samples": {
+    "real_et_ett": [],
+    "repository_search": "No .et/.ett sample in maintained skill",
+    "public_test_corpus": "SheetJS/test_files disabled when checked; not downloaded or relicensed",
+    "synthetic": "In-memory CFB v3/v4 builders in test_xlsx_cfb.py; not WPS producer files or ET acceptance",
+    "biff8_synthetic": "In-memory record fixtures in test_xlsx_biff8.py; not WPS/Excel producer files"
+  },
+  "validation_limit": "CFB container and separate strict MS-XLS BIFF8 record subset tested synthetically; no native ET/ETT or application interoperability acceptance",
+  "biff8_record_sources": [
+    {
+      "title": "MS-XLS overview",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/cd03cb5f-ca02-4934-a391-bb674cb8aa06"
+    },
+    {
+      "title": "Record",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/170e90ce-87d7-4758-9331-dcf14cd72388"
+    },
+    {
+      "title": "BOF",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/4d6a3d1e-d7c5-405f-bbae-d01e9cb79366"
+    },
+    {
+      "title": "BoundSheet8",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/b9ec509a-235d-424e-871d-f8e721106501"
+    },
+    {
+      "title": "SST",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/b6231b92-d32e-4626-badd-c3310a672bab"
+    },
+    {
+      "title": "XLUnicodeRichExtendedString",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/173d9f51-e5d3-43da-8de2-be7f22e119b9"
+    },
+    {
+      "title": "Number",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/a40c74c6-3df4-4e81-9a43-85521cc92c0a"
+    },
+    {
+      "title": "RkNumber",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/04fa5340-122f-49db-93ea-00cc75501efc"
+    },
+    {
+      "title": "MulRk",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/d125fec1-fc58-4e11-8e87-762a762e0a3b"
+    },
+    {
+      "title": "Blank",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/2918f1db-545e-432a-8f57-599c44251f07"
+    },
+    {
+      "title": "LabelSst",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/3f52609d-816f-44a7-aad1-e0fe2abccebd"
+    },
+    {
+      "title": "BoolErr",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/eb6cc285-5663-4859-982b-6662ee116614"
+    },
+    {
+      "title": "MergeCells",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/41a3a3e7-1015-4322-8329-37dcdf41179b"
+    },
+    {
+      "title": "Date1904",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/4a5e900a-0eb0-4355-8fc1-81aab8f46e8b"
+    },
+    {
+      "title": "XF",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/993d15c4-ec04-43e9-ba36-594dfb336c6d"
+    },
+    {
+      "title": "Format",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/300280fd-e4fe-4675-a924-4d383af48d3b"
+    },
+    {
+      "title": "Formula",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/8e3c6978-6c9f-4915-a826-07613204b244"
+    },
+    {
+      "title": "FormulaValue",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/39a0757a-c7bb-4e85-b144-3e7837b059d7"
+    },
+    {
+      "title": "CellParsedFormula",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/7dd67f0a-671d-4905-b87b-4cc07295e442"
+    },
+    {
+      "title": "String",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/504b6cfc-d57b-4296-92f4-ceefc0a2ca9b"
+    },
+    {
+      "title": "WsBool",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/ccbd73f9-ff1d-4069-be31-13d16c074ec4"
+    },
+    {
+      "title": "Record IDs",
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/43684742-8fcd-4fcd-92df-157d8d7241f9"
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "metric_id": "balance",
+  "scope": {
+    "report_level": "branch",
+    "currency": "CNY",
+    "version": "v1",
+    "definition_version": "v1",
+    "unit": "万元",
+    "kind": "stock",
+    "time_basis": "point_in_time",
+    "period_granularity": "month"
+  },
+  "periods": [
+    "2025-01",
+    "2025-02",
+    "2025-03"
+  ],
+  "institutions": [
+    {
+      "id": "00012345678901234567890",
+      "level": "branch",
+      "peer_group": "fictional-peers"
+    },
+    {
+      "id": "0002",
+      "level": "branch",
+      "peer_group": "fictional-peers"
+    }
+  ],
+  "context": {
+    "line": "retail"
+  },
+  "plan_definition": {
+    "target_type": "balance",
+    "unit": "万元",
+    "kind": "stock",
+    "time_basis": "point_in_time",
+    "currency": "CNY",
+    "version": "v1",
+    "definition_version": "v1",
+    "plan_version": "fictional-plan-v1",
+    "direction": "at_least"
+  },
+  "plans": [
+    {
+      "institution": "00012345678901234567890",
+      "period": "2025-01",
+      "applicability": "applicable",
+      "value": 450
+    },
+    {
+      "institution": "00012345678901234567890",
+      "period": "2025-02",
+      "applicability": "applicable",
+      "value": 500
+    },
+    {
+      "institution": "00012345678901234567890",
+      "period": "2025-03",
+      "applicability": "applicable",
+      "value": 650
+    },
+    {
+      "institution": "0002",
+      "period": "2025-01",
+      "applicability": "applicable",
+      "value": 250
+    },
+    {
+      "institution": "0002",
+      "period": "2025-02",
+      "applicability": "applicable",
+      "value": 300
+    },
+    {
+      "institution": "0002",
+      "period": "2025-03",
+      "applicability": "applicable",
+      "value": 400
+    }
+  ],
+  "rank_method": "competition"
+}

@@ -1,0 +1,129 @@
+{
+  "sheets": [
+    {
+      "name": "Observed",
+      "cells": {
+        "A1": {
+          "value": "脱敏账户"
+        },
+        "B1": {
+          "value": "稳定脱敏客户"
+        },
+        "C1": {
+          "value": "观察机构"
+        },
+        "D1": {
+          "value": "产品"
+        },
+        "E1": {
+          "value": "明确持有"
+        },
+        "F1": {
+          "value": "期间"
+        },
+        "G1": {
+          "value": "版本"
+        },
+        "H1": {
+          "value": "层级"
+        },
+        "I1": {
+          "value": "范围"
+        },
+        "J1": {
+          "value": "指定归属"
+        },
+        "A2": {
+          "value": "account-001"
+        },
+        "B2": {
+          "value": "fictional-customer-001"
+        },
+        "C2": {
+          "value": "A"
+        },
+        "D2": {
+          "value": "P1"
+        },
+        "E2": {
+          "value": true
+        },
+        "F2": {
+          "value": "2025-01"
+        },
+        "G2": {
+          "value": "v1"
+        },
+        "H2": {
+          "value": "branch"
+        },
+        "I2": {
+          "value": "fictional-selected-universe"
+        },
+        "J2": {
+          "value": "A"
+        },
+        "A3": {
+          "value": "account-002"
+        },
+        "B3": {
+          "value": "fictional-customer-001"
+        },
+        "C3": {
+          "value": "A"
+        },
+        "D3": {
+          "value": "P2"
+        },
+        "E3": {
+          "value": true
+        },
+        "F3": {
+          "value": "2025-01"
+        },
+        "G3": {
+          "value": "v1"
+        },
+        "H3": {
+          "value": "branch"
+        },
+        "I3": {
+          "value": "fictional-selected-universe"
+        },
+        "J3": {
+          "value": "A"
+        },
+        "A4": {
+          "value": "account-003"
+        },
+        "B4": {
+          "value": "fictional-customer-002"
+        },
+        "C4": {
+          "value": "B"
+        },
+        "D4": {
+          "value": "P2"
+        },
+        "E4": {
+          "value": false
+        },
+        "F4": {
+          "value": "2025-01"
+        },
+        "G4": {
+          "value": "v1"
+        },
+        "H4": {
+          "value": "branch"
+        },
+        "I4": {
+          "value": "fictional-selected-universe"
+        },
+        "J4": {
+          "value": "B"
+        }
+      }
+    }
+  ]
+}

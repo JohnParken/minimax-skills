@@ -14,6 +14,7 @@ from xml.etree import ElementTree as ET
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from stdlib_xlsx import Workbook, MAX_BYTES, MAX_MEMBERS, xml
+from xlsx_cfb import CompoundFile
 
 MAX_FILE_BYTES = 32 * 1024 * 1024
 COMPOUND_SIGNATURE = bytes.fromhex('D0CF11E0A1B11AE1')
@@ -35,10 +36,17 @@ def identify(path):
         if valid:
             major, shift = struct.unpack_from('<H', data, 26)[0], struct.unpack_from('<H', data, 30)[0]
             valid = (major, shift) in ((3, 9), (4, 12)) and len(data) >= 2**shift
-        return {**result, 'container': 'compound_binary',
-                'status': 'conversion_required' if valid else 'invalid',
-                'header_consistent': valid,
-                'message': 'Compound container header only; payload could be binary spreadsheet, encrypted OOXML or another document. No ET/ETT stream parsing performed.'}
+        if not valid:
+            return {**result,'container':'compound_binary','status':'invalid','header_consistent':False,
+                    'support_level':'none','message':'Truncated/inconsistent compound header'}
+        try:
+            probe=CompoundFile(data).report()
+            return {**result,**probe,'container_status':probe['status'],
+                    'status':'encrypted_unsupported' if probe['status']=='encrypted_unsupported' else 'conversion_required',
+                    'parser_supported':False,'header_consistent':True}
+        except (ValueError,struct.error) as exc:
+            return {**result,'container':'compound_binary','status':'invalid_or_unsupported',
+                    'header_consistent':True,'support_level':'none','message':str(exc)}
     if not data.startswith((b'PK\x03\x04', b'PK\x05\x06', b'PK\x07\x08')):
         return result
     result['container'] = 'zip'

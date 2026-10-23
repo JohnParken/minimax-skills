@@ -1,5 +1,11 @@
 # Read-only data analysis and file identification
 
+## Contents
+
+- [Profile a sheet or region](#profile-a-sheet-or-region)
+- [Filter and summarize](#filter-and-summarize)
+- [Identify contents, including ET/ETT candidates](#identify-contents-including-etett-candidates)
+
 Resolve `<skill_dir>` from the actual SKILL.md path before running commands. Run the
 [entrypoint self-check](../SKILL.md#执行环境约束与首步自检) first, require exit 0 and
 `status: ready`, then confirm input readability. Use Python 3.9+ with `-I -S -B`;
@@ -86,10 +92,11 @@ extension reported; the maintained reader still rejects that suffix. A ZIP signa
 alone never yields spreadsheet support. Templates or other OOXML document types may be
 unsupported. Unrecognized data is not automatically declared corrupt.
 
-`compound_binary` checks only basic compound-container header consistency. Streams are
-not decoded: content might be a binary spreadsheet, encrypted OOXML or another document.
-Truncated/invalid headers are reported; a consistent header does not prove a valid file.
-Native ET/ETT parsing is not implemented, and reports always state that explicitly.
+`compound_binary` now uses the bounded [CFB container reader](et-ett-readonly.md) to check
+allocation chains/directory structure and list streams. Container readability does not
+establish BIFF or ET/ETT semantics. A header alone is insufficient; invalid or outside-subset
+structures are reported. Known encrypted payloads are unsupported. Native ET/ETT cell
+parsing is not implemented, and support-level flags always distinguish those claims.
 For a trusted file, open a copy locally in WPS Spreadsheets, Save As a new XLSX, preserve
 the original template, then verify sheets, values, formulas and formatting. Renaming
 is not conversion. No application is launched and no conversion happens automatically.

@@ -1,7 +1,7 @@
 ---
 name: minimax-xlsx
-version: "2.0"
-description: "Create, inspect and edit XLSX cells, calculate supported formulas, and import/export CSV or TSV. Use for reports and spreadsheet data exchange."
+version: "2.1.0"
+description: "Analyze spreadsheet data and create readable XLSX reports. Use for management summaries, limited cell edits, and CSV/TSV exchange."
 license: MIT
 ---
 
@@ -41,6 +41,14 @@ context compaction. Verify the actual output and available delivery mechanism se
 
 | Task | Action | Reference |
 |---|---|---|
+| Read a strict BIFF8 record subset, raw dates/caches and merges | `xlsx_biff8.py`; real ET/ETT compatibility unverified | [biff8-readonly.md](references/biff8-readonly.md) |
+| Inspect bounded compound-container structure for ET/ETT investigation | `xlsx_cfb.py`; no spreadsheet cell decoding | [et-ett-readonly.md](references/et-ett-readonly.md) |
+| Summarize explicit deposit maturity buckets and cumulative windows | `xlsx_maturity.py` | [maturity-distribution.md](references/maturity-distribution.md) |
+| Aggregate observed customers, product coverage and two-period sets | `xlsx_customers.py` | [customer-structure.md](references/customer-structure.md) |
+| Validate management policy, explicit plan deviation and comparable peers | `xlsx_management_policy.py` | [management-policy.md](references/management-policy.md) |
+| Analyze deposit snapshot changes, daily/end differences and explicit targets | `xlsx_deposits.py` | [deposit-analysis.md](references/deposit-analysis.md) |
+| Calculate explicit deposit category shares and Top N concentration | `xlsx_deposit_structure.py` | [deposit-analysis.md](references/deposit-analysis.md) |
+| Reconcile two comparable management reports and allocate arithmetic changes | `xlsx_reconcile.py`; optional `--xlsx` | [management-reconciliation.md](references/management-reconciliation.md) |
 | Build a static management dashboard from a native wide report | `xlsx_dashboard.py`; optional `--xlsx` | [management-dashboard.md](references/management-dashboard.md) |
 | Roll leaf institutions up a validated static hierarchy | `xlsx_management.py` with hierarchy config | [institution-hierarchy.md](references/institution-hierarchy.md) |
 | Compute explicit daily means or month/YTD daily-flow sums | `xlsx_daily.py average` / `accumulate` | [daily-analysis.md](references/daily-analysis.md) |
@@ -100,7 +108,9 @@ Do not insert/delete/move rows, columns or sheets. Editing a sheet containing sh
 array or other specially attributed formulas is refused. Macro parts can be retained
 in XLSM files, but macros are never run. Charts and pivots are retained, not refreshed.
 Dates are exposed as stored serials or ISO strings, without display-format conversion.
-Signed/encrypted files, legacy XLS/XLSB, chart sheets and strict OOXML are unsupported.
+Signed/encrypted files, chart sheets and strict OOXML are unsupported. The OOXML workflow
+rejects legacy XLS/XLSB; the separate BIFF8 reader supports only its documented read-only
+record subset and does not enable generic XLS editing or native ET/ETT compatibility.
 
 ## Legacy utilities
 
